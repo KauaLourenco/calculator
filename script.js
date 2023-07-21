@@ -33,14 +33,22 @@ keypad.addEventListener('click', (e) => {
         sign = symbols;
         displayNumbers();
 
-    } else if (result === '' && btnClass === 'numbers') {
+    } else if (operator !== '' && result === '' && btnClass === 'numbers') {
         secondNum += clickedBtn;
         displayNumbers();
 
+    } else if (result !== '' && btnClass === 'operators') {
+        firstNum = result;
+        operator = clickedBtn;
+        secondNum = '';
+        result = '';
+        sign = symbols;
+
+        displayNumbers();
     };
 });
 
-// Get operation
+// Operation
 
 function getOperation(a, b) {
     switch (operator) {
@@ -54,7 +62,11 @@ function getOperation(a, b) {
             result = a * b;
             break;
         case 'divide':
-            result = a / b;
+            if (b === '0') {
+                result = 'Infinity';
+            } else {
+                result = a / b;
+            };
             break;
     };
 };
@@ -62,9 +74,10 @@ function getOperation(a, b) {
 // Operate
 
 equalBtn.addEventListener('click', () => {
-    getOperation(firstNum, secondNum);
-
-    displayResult();
+    if (firstNum !== '' && operator !== '' && secondNum !== '') {
+        getOperation(firstNum, secondNum);
+        displayResult();
+    };
 });
 
 // Display
@@ -89,5 +102,4 @@ clearBtn.addEventListener('click', () => {
     sign = '';
 
     display.textContent = '';
-    display.removeChild(resultPara);
 });

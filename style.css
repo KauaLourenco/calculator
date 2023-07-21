@@ -66,6 +66,7 @@ body {
 
 .display-panel p:nth-child(1) {
     color: var(--operators-color);
+    font-size: 2.2rem;
 }
 
 .input-line {
