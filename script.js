@@ -17,19 +17,26 @@ let operator = '';
 let secondNum = '';
 
 let result = '';
+let sign = '';
 
 keypad.addEventListener('click', (e) => {
     const btnClass = e.target.classList[0];
     const clickedBtn = e.target.id;
+    const symbols = e.target.textContent;
 
     if (operator === '' && btnClass === 'numbers') {
         firstNum += clickedBtn;
+        displayNumbers();
 
-    } else if (firstNum !== '' && operator === '' && btnClass === 'operators') {
+    } else if (firstNum !== '' && sign === '' && btnClass === 'operators') {
         operator = clickedBtn;
+        sign = symbols;
+        displayNumbers();
 
-    } else {
+    } else if (result === '' && btnClass === 'numbers') {
         secondNum += clickedBtn;
+        displayNumbers();
+
     };
 });
 
@@ -57,5 +64,30 @@ function getOperation(a, b) {
 equalBtn.addEventListener('click', () => {
     getOperation(firstNum, secondNum);
 
-    console.log(result);
+    displayResult();
+});
+
+// Display
+
+function displayNumbers() {
+    display.textContent = `${firstNum} ${sign} ${secondNum}`;
+};
+
+function displayResult() {
+    if (!display.children[0]) {
+        const resultPara = document.createElement('p');
+        resultPara.textContent = `= ${result}`;
+        display.appendChild(resultPara);
+    };
+};
+
+clearBtn.addEventListener('click', () => {
+    firstNum = '';
+    operator = '';
+    secondNum = '';
+    result = '';
+    sign = '';
+
+    display.textContent = '';
+    display.removeChild(resultPara);
 });
