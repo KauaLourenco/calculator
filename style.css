@@ -1,0 +1,140 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    height: 100vh;
+    font-size: 1.6rem;
+    background-color: var(--body-bg);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+:root {
+    --body-bg: #000;
+    --calc-bg: #312f2f;
+    --display-bg: #424040;
+    --display-color: white;
+
+    --keypad-bg: #312f2f;
+    --btn-bg: #534f4f;
+    --btn-hover: #726f6f;
+
+    --clear-color: rgb(250, 99, 99);
+    --numbers-color: white;
+    --operators-color: lightblue;
+    --equal-bg: lightblue;
+    --equal-hover: rgb(81, 157, 182);
+}
+
+/* Calculator */
+
+.calculator {
+    width: 35rem;
+    height: 55rem;
+    padding: 4rem;
+
+    background-color: var(--calc-bg);
+    border-radius: 2.5rem;
+}
+
+.display-panel {
+    width: 100%;
+    height: 25%;
+    margin-bottom: 2rem;
+    padding: 2rem;
+
+    color: var(--display-color);
+    background-color: var(--display-bg);
+    border: 2px solid var(--body-bg);
+
+    display: flex;
+    align-items: flex-end;
+}
+
+.input-line {
+    margin-left: auto;
+    padding-right: 0.5rem;
+    position: relative;
+    direction: rtl;
+
+    font-size: 2rem;
+}
+
+.input-line::before {
+    content: '';
+    width: 2px;
+    height: 3rem;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+
+    background-color: var(--display-color);
+    display: inline-block;
+
+    animation: blink 1.2s infinite;
+}
+
+.keypad {
+    width: 100%;
+    height: 75%;
+
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+.keypad button {
+    width: 6rem;
+    height: 6rem;
+
+    font-size: 2.2rem;
+    background-color: var(--btn-bg);
+
+    border: 1px solid var(--body-bg);;
+    border-radius: 50%;
+
+    transition: all .2s;
+}
+
+.keypad button:hover {
+    background-color: var(--btn-hover);
+}
+
+#clear-display {
+    color: var(--clear-color);
+    font-weight: 900;
+}
+.operators {
+    color: var(--operators-color);
+}
+.numbers {
+    color: var(--numbers-color);
+}
+#equal {
+    background-color: var(--equal-bg);
+    color: black;
+}
+#equal:hover {
+    background-color: var(--equal-hover);
+}
+
+/* Animations */
+
+@keyframes blink {
+   0% {opacity: 0;}
+   24% {opacity: 0;}
+   25% {opacity: 1;}
+   75% {opacity: 1;}
+   76% {opacity: 0;}
+   100% {opacity: 0;}
+}
