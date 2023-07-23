@@ -16,21 +16,23 @@ let displayList = [];
 let operatorList = [];
 
 keypad.addEventListener('click', (e) => {
-    const clickedBtn = e.target.textContent;
+    const clickedBtn = e.target.id;
+    const btnType = e.target.classList;
+    const operationSign = e.target.textContent;
     const lastBtn = displayList.length - 1;
     
-    if (e.target.id === '' || clickedBtn === 'C' || clickedBtn === '=') {return};
-    if (clickedBtn === '0' && displayList.length < 1) {return};
+    if (btnType.contains('non-operators')) return;
+    if (clickedBtn === '0' && displayList.length < 1) return;
     
-    if ((Number(clickedBtn) || clickedBtn === '0') && Number(displayList[lastBtn])) {
+    if (btnType.contains('numbers') && Number(displayList[lastBtn])) {
         // Put a sequence of numbers together as one.
         displayList[lastBtn] += clickedBtn;
 
-    } else if (!Number(clickedBtn)) {
-        displayList.push(clickedBtn);
-        operatorList.push(e.target.id);
+    } else if (btnType.contains('operators')) {
+        displayList.push(operationSign);
+        operatorList.push(clickedBtn);
 
-    } else {
+    } else{
         displayList.push(clickedBtn);
     };
 
