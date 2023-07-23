@@ -10,45 +10,54 @@ const equalBtn = document.querySelector('#equal');
 const dotBtn = document.querySelector('#dot');
 const signalBtn = document.querySelector('#signal');
 
-// Get numbers and operator
+// Get buttons for display
+
+let displayList = [];
+let operatorList = [];
+
+keypad.addEventListener('click', (e) => {
+    const clickedBtn = e.target.textContent;
+    const lastBtn = displayList.length - 1;
+    
+    if (e.target.id === '' || clickedBtn === 'C' || clickedBtn === '=') {return};
+    if (clickedBtn === '0' && displayList.length < 1) {return};
+    
+    if ((Number(clickedBtn) || clickedBtn === '0') && Number(displayList[lastBtn])) {
+        // Put a sequence of numbers together as one.
+        displayList[lastBtn] += clickedBtn;
+
+    } else if (!Number(clickedBtn)) {
+        displayList.push(clickedBtn);
+        operatorList.push(e.target.id);
+
+    } else {
+        displayList.push(clickedBtn);
+    };
+
+    displayOperation();
+});
+
+// Operation
 
 let firstNum = '';
 let operator = '';
 let secondNum = '';
-
 let result = '';
-let sign = '';
 
-keypad.addEventListener('click', (e) => {
-    const btnClass = e.target.classList[0];
-    const clickedBtn = e.target.id;
-    const symbols = e.target.textContent;
+function operate() {
+    while (displayList.length > 1) {
+        firstNum = displayList[0];
+        operator = operatorList[0];
+        secondNum = displayList[2];
+    
+        getOperation(firstNum, secondNum);
+        
+        if (secondNum === undefined) {return};
 
-    if (operator === '' && btnClass === 'numbers') {
-        firstNum += clickedBtn;
-        displayNumbers();
-
-    } else if (firstNum !== '' && sign === '' && btnClass === 'operators') {
-        operator = clickedBtn;
-        sign = symbols;
-        displayNumbers();
-
-    } else if (operator !== '' && result === '' && btnClass === 'numbers') {
-        secondNum += clickedBtn;
-        displayNumbers();
-
-    } else if (result !== '' && btnClass === 'operators') {
-        firstNum = result;
-        operator = clickedBtn;
-        secondNum = '';
-        result = '';
-        sign = symbols;
-
-        displayNumbers();
+        displayList.splice(0, 3, result);
+        operatorList.splice(0, 1);
     };
-});
-
-// Operation
+};
 
 function getOperation(a, b) {
     switch (operator) {
@@ -71,19 +80,18 @@ function getOperation(a, b) {
     };
 };
 
-// Operate
-
 equalBtn.addEventListener('click', () => {
-    if (firstNum !== '' && operator !== '' && secondNum !== '') {
-        getOperation(firstNum, secondNum);
+    operate();
+
+    if (operator !== '' && secondNum !== undefined) {
         displayResult();
     };
 });
 
 // Display
 
-function displayNumbers() {
-    display.textContent = `${firstNum} ${sign} ${secondNum}`;
+function displayOperation() {
+    display.textContent = displayList.toString().replaceAll(',', ' ');
 };
 
 function displayResult() {
@@ -95,11 +103,7 @@ function displayResult() {
 };
 
 clearBtn.addEventListener('click', () => {
-    firstNum = '';
-    operator = '';
-    secondNum = '';
-    result = '';
-    sign = '';
-
+    displayList = [];
+    operatorList = [];
     display.textContent = '';
 });
