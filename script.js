@@ -20,19 +20,27 @@ keypad.addEventListener('click', (e) => {
     const btnType = e.target.classList;
     const operationSign = e.target.textContent;
     const lastBtn = displayList.length - 1;
-    
+
     if (btnType.contains('non-operators')) return;
+    if (btnType.contains('operators') && !Number(displayList[lastBtn])) return;
+    if (btnType.contains('numbers') && result !== '') return;
     if (clickedBtn === '0' && displayList.length < 1) return;
-    
+
     if (btnType.contains('numbers') && Number(displayList[lastBtn])) {
         // Put a sequence of numbers together as one.
         displayList[lastBtn] += clickedBtn;
+
+    } else if (btnType.contains('operators') && result !== '') {
+        display.removeChild(display.children[1]);
+        result = '';
+        displayList.push(operationSign);
+        operatorList.push(clickedBtn);
 
     } else if (btnType.contains('operators')) {
         displayList.push(operationSign);
         operatorList.push(clickedBtn);
 
-    } else{
+    } else {
         displayList.push(clickedBtn);
     };
 
@@ -51,9 +59,9 @@ function operate() {
         firstNum = displayList[0];
         operator = operatorList[0];
         secondNum = displayList[2];
-    
+
         getOperation(firstNum, secondNum);
-        
+
         if (secondNum === undefined) {return};
 
         displayList.splice(0, 3, result);
@@ -84,20 +92,20 @@ function getOperation(a, b) {
 
 equalBtn.addEventListener('click', () => {
     operate();
-
+    
     if (operator !== '' && secondNum !== undefined) {
-        displayResult();
+    displayResult();
     };
 });
 
 // Display
 
 function displayOperation() {
-    display.textContent = displayList.toString().replaceAll(',', ' ');
+    inputLine.textContent = displayList.toString().replaceAll(',', ' ');
 };
 
 function displayResult() {
-    if (!display.children[0]) {
+    if (!display.children[1]) {
         const resultPara = document.createElement('p');
         resultPara.textContent = `= ${result}`;
         display.appendChild(resultPara);
@@ -107,5 +115,7 @@ function displayResult() {
 clearBtn.addEventListener('click', () => {
     displayList = [];
     operatorList = [];
-    display.textContent = '';
+    result = '';
+    inputLine.textContent = '';
+    display.removeChild(display.children[1]);
 });

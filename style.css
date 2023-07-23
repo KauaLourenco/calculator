@@ -50,7 +50,7 @@ body {
     width: 100%;
     height: 25%;
     margin-bottom: 2rem;
-    padding: 2rem;
+    padding: 1rem;
 
     font-size: 2.5rem;
     color: var(--display-color);
@@ -64,15 +64,17 @@ body {
     justify-content: space-between;
 }
 
-.display-panel p:nth-child(1) {
+.display-panel p:nth-child(2) {
     color: var(--operators-color);
     font-size: 2.2rem;
 }
 
 .input-line {
+    width: 100%;
+    min-height: 3rem;
     padding-right: 0.5rem;
     position: relative;
-    direction: rtl;
+    text-align: right;
 }
 
 .input-line::before {
@@ -81,8 +83,7 @@ body {
     height: 3rem;
     position: absolute;
     right: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom: 0;
 
     background-color: var(--display-color);
     display: inline-block;
