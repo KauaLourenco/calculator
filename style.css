@@ -117,9 +117,13 @@ body {
     background-color: var(--btn-hover);
 }
 
-#clear-display {
+#clear-display,
+#backspace {
     color: var(--clear-color);
     font-weight: 900;
+}
+#backspace {
+    font-size: 3rem;
 }
 .operators,
 #percentage {

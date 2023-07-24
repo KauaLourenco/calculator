@@ -1,7 +1,7 @@
 const display = document.querySelector('.display-panel');
 const inputLine = document.querySelector('.input-line');
 const clearBtn = document.querySelector('#clear-display');
-const groupBtn = document.querySelector('#group');
+const backspaceBtn = document.querySelector('#backspace');
 const percentageBtn = document.querySelector('#percentage');
 
 const keypad = document.querySelector('.keypad');
@@ -104,6 +104,7 @@ function getOperation(a, b) {
 
 equalBtn.addEventListener('click', () => {
     operate();
+    console.table(displayList)
 
     if (operator !== '' && secondNum !== undefined) {
         displayResult();
@@ -172,5 +173,23 @@ signBtn.addEventListener('click', () => {
 
     };
     displayOperation();
-    console.table(displayList)
+});
+
+// Backspace
+
+backspaceBtn.addEventListener('click', () => {
+    const lastBtn = displayList.length - 1;
+
+    if (result !== '') {
+        display.removeChild(display.children[1]);
+        result = '';
+
+    } else if (displayList[lastBtn].length === 1) {
+        displayList.splice(-1, 1);
+
+    } else if (Number(displayList[lastBtn]) || +displayList === 0) {
+        displayList[displayList.length - 1] = displayList[displayList.length - 1].slice(0, -1);
+    };
+
+    displayOperation();
 });
