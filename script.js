@@ -20,19 +20,19 @@ let operatorList = [];
 for (let number of numbers) {
     number.addEventListener('click', (e) => {
         const clickedNum = e.target.id;
-        const lastBtn = displayList.length-1;
+        const lastBtn = displayList.length - 1;
 
         // Avoid numbers after results and multiple isolated 0's.
         if (result !== '' || (displayList[lastBtn] === '0' && clickedNum === '0')) return;
 
-        if (Number(displayList[lastBtn]) || displayList[lastBtn] === '0.') {
+        if (Number(displayList[lastBtn])) {
             displayList[displayList.length - 1] += clickedNum;
 
-        } else if (displayList[lastBtn] !== '0') {
-            displayList.push(clickedNum);
-
-        } else if (displayList[lastBtn] === '0' && Number(clickedNum)) {
+        } else if (+displayList[lastBtn] === 0 && Number(clickedNum)) {
             displayList[displayList.length - 1] = clickedNum;
+
+        } else {
+            displayList.push(clickedNum);
         };
         displayOperation();
     });
@@ -42,7 +42,7 @@ for (let operator of operators) {
     operator.addEventListener('click', (e) => {
         const clickedOp = e.target.textContent;
         const opSign = e.target.id;
-        const lastBtn = displayList.length-1;
+        const lastBtn = displayList.length - 1;
 
         if (result !== '') {
             display.removeChild(display.children[1]);
@@ -50,7 +50,7 @@ for (let operator of operators) {
             displayList.push(clickedOp);
             operatorList.push(opSign);
 
-        } else if (Number(displayList[lastBtn]) || displayList[lastBtn] === '0') {
+        } else if (Number(displayList[lastBtn]) || +displayList[lastBtn] === 0) {
             displayList.push(clickedOp);
             operatorList.push(opSign);
         };
@@ -73,7 +73,7 @@ function operate() {
 
         getOperation(firstNum, secondNum);
 
-        if (secondNum === undefined) {return};
+        if (secondNum === undefined) { return };
 
         displayList.splice(0, 3, result);
         operatorList.splice(0, 1);
@@ -103,9 +103,9 @@ function getOperation(a, b) {
 
 equalBtn.addEventListener('click', () => {
     operate();
-    
+
     if (operator !== '' && secondNum !== undefined) {
-    displayResult();
+        displayResult();
     };
 });
 
@@ -128,18 +128,26 @@ clearBtn.addEventListener('click', () => {
     operatorList = [];
     result = '';
     inputLine.textContent = '';
-    if (display.children[1]) {display.removeChild(display.children[1])};
+    if (display.children[1]) { display.removeChild(display.children[1]) };
 });
 
 // Decimals
 
 dotBtn.addEventListener('click', () => {
-    const lastBtn = displayList.length-1;
+    const lastBtn = displayList.length - 1;
 
     if (displayList[lastBtn].includes('.')) return;
 
     if (Number(displayList[lastBtn]) || displayList[lastBtn] === '0') {
         displayList[displayList.length - 1] += '.';
     };
+    displayOperation();
+});
+
+// Percentage
+
+percentageBtn.addEventListener('click', () => {
+    displayList[displayList.length - 1] = displayList[displayList.length - 1] / 100;
+
     displayOperation();
 });
