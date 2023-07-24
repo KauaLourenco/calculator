@@ -8,7 +8,7 @@ const keypad = document.querySelector('.keypad');
 const numbers = document.querySelectorAll('.numbers');
 const operators = document.querySelectorAll('.operators');
 
-const signalBtn = document.querySelector('#signal');
+const signBtn = document.querySelector('#change-sign');
 const dotBtn = document.querySelector('#dot');
 const equalBtn = document.querySelector('#equal');
 
@@ -25,11 +25,12 @@ for (let number of numbers) {
         // Avoid numbers after results and multiple isolated 0's.
         if (result !== '' || (displayList[lastBtn] === '0' && clickedNum === '0')) return;
 
-        if (Number(displayList[lastBtn])) {
-            displayList[displayList.length - 1] += clickedNum;
 
-        } else if (+displayList[lastBtn] === 0 && Number(clickedNum)) {
+        if (displayList[lastBtn] === '0' && Number(clickedNum)) {
             displayList[displayList.length - 1] = clickedNum;
+
+        } else if (Number(displayList[lastBtn]) || +displayList[lastBtn] === 0 || displayList[lastBtn] === '-') {
+            displayList[displayList.length - 1] += clickedNum;
 
         } else {
             displayList.push(clickedNum);
@@ -150,4 +151,26 @@ percentageBtn.addEventListener('click', () => {
     displayList[displayList.length - 1] = displayList[displayList.length - 1] / 100;
 
     displayOperation();
+});
+
+// Change sign
+
+signBtn.addEventListener('click', () => {
+    const lastBtn = displayList.length - 1;
+
+    if (displayList.length === 0 || (!Number(displayList[lastBtn]) && +displayList[lastBtn] !== 0 && displayList[lastBtn] !== '-')) {
+        displayList.push('-');
+
+    } else if (displayList[lastBtn] === '') {
+        displayList[displayList.length - 1] = '-';
+
+    } else if (displayList[lastBtn].includes('-')) {
+        displayList[displayList.length - 1] = displayList[displayList.length - 1].slice(1);
+
+    } else if (+displayList[lastBtn] !== 0 && Number(displayList[lastBtn])) {
+        displayList[displayList.length - 1] = '-' + displayList[displayList.length - 1];
+
+    };
+    displayOperation();
+    console.table(displayList)
 });

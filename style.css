@@ -126,7 +126,7 @@ body {
     color: var(--operators-color);
 }
 .numbers,
-#signal,
+#change-sign,
 #dot {
     color: var(--numbers-color);
 }
