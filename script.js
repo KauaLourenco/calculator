@@ -5,47 +5,58 @@ const groupBtn = document.querySelector('#group');
 const percentageBtn = document.querySelector('#percentage');
 
 const keypad = document.querySelector('.keypad');
+const numbers = document.querySelectorAll('.numbers');
+const operators = document.querySelectorAll('.operators');
+
+const signalBtn = document.querySelector('#signal');
+const dotBtn = document.querySelector('#dot');
 const equalBtn = document.querySelector('#equal');
 
-const dotBtn = document.querySelector('#dot');
-const signalBtn = document.querySelector('#signal');
-
-// Get buttons for display
+// Keypad buttons
 
 let displayList = [];
 let operatorList = [];
 
-keypad.addEventListener('click', (e) => {
-    const clickedBtn = e.target.id;
-    const btnType = e.target.classList;
-    const operationSign = e.target.textContent;
-    const lastBtn = displayList.length - 1;
+for (let number of numbers) {
+    number.addEventListener('click', (e) => {
+        const clickedNum = e.target.id;
+        const lastBtn = displayList.length-1;
 
-    if (btnType.contains('non-operators')) return;
-    if (btnType.contains('operators') && !Number(displayList[lastBtn])) return;
-    if (btnType.contains('numbers') && result !== '') return;
-    if (clickedBtn === '0' && displayList.length < 1) return;
+        // Avoid numbers after results and multiple isolated 0's.
+        if (result !== '' || (displayList[lastBtn] === '0' && clickedNum === '0')) return;
 
-    if (btnType.contains('numbers') && Number(displayList[lastBtn])) {
-        // Put a sequence of numbers together as one.
-        displayList[lastBtn] += clickedBtn;
+        if (Number(displayList[lastBtn]) || displayList[lastBtn] === '0.') {
+            displayList[displayList.length - 1] += clickedNum;
 
-    } else if (btnType.contains('operators') && result !== '') {
-        display.removeChild(display.children[1]);
-        result = '';
-        displayList.push(operationSign);
-        operatorList.push(clickedBtn);
+        } else if (displayList[lastBtn] !== '0') {
+            displayList.push(clickedNum);
 
-    } else if (btnType.contains('operators')) {
-        displayList.push(operationSign);
-        operatorList.push(clickedBtn);
+        } else if (displayList[lastBtn] === '0' && Number(clickedNum)) {
+            displayList[displayList.length - 1] = clickedNum;
+        };
+        displayOperation();
+    });
+};
 
-    } else {
-        displayList.push(clickedBtn);
-    };
+for (let operator of operators) {
+    operator.addEventListener('click', (e) => {
+        const clickedOp = e.target.textContent;
+        const opSign = e.target.id;
+        const lastBtn = displayList.length-1;
 
-    displayOperation();
-});
+        if (result !== '') {
+            display.removeChild(display.children[1]);
+            result = '';
+            displayList.push(clickedOp);
+            operatorList.push(opSign);
+
+        } else if (Number(displayList[lastBtn]) || displayList[lastBtn] === '0') {
+            displayList.push(clickedOp);
+            operatorList.push(opSign);
+        };
+        displayOperation();
+    });
+};
 
 // Operation
 
@@ -117,5 +128,18 @@ clearBtn.addEventListener('click', () => {
     operatorList = [];
     result = '';
     inputLine.textContent = '';
-    display.removeChild(display.children[1]);
+    if (display.children[1]) {display.removeChild(display.children[1])};
+});
+
+// Decimals
+
+dotBtn.addEventListener('click', () => {
+    const lastBtn = displayList.length-1;
+
+    if (displayList[lastBtn].includes('.')) return;
+
+    if (Number(displayList[lastBtn]) || displayList[lastBtn] === '0') {
+        displayList[displayList.length - 1] += '.';
+    };
+    displayOperation();
 });
